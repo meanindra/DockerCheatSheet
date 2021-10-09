@@ -176,7 +176,6 @@ docker container restart nginx
 ## বিরাম করা
 ```
 docker container pause nginx
-
 ```
 
 ## বিরামহীন করা
@@ -209,3 +208,168 @@ docker container kill -s HUP nginx
 ```
 docker container attach nginx
 ```
+
+
+# কনটেইনার সম্পর্কে তথ্য পাওয়া
+
+## চলমান কন্টেইনার থেকে
+
+সংক্ষিপ্ত উপায়:
+Shortest way:        
+```
+docker ps
+```
+বিকল্প উপায়:
+```
+docker container ls
+```
+
+## সব কন্টেইনার থেকে
+```
+docker ps -a
+```
+```
+docker container ls -a
+```
+
+## কন্টেইনার লগ
+```
+docker logs infinite
+```
+
+## 'tail -f' কন্টেইনার এর লগ
+
+```
+docker container logs infinite -f
+```
+
+## কন্টেইনার পর্যবেক্ষণ
+
+```
+docker container inspect infinite
+```
+
+```
+docker container inspect --format '{{ .NetworkSettings.IPAddress }}' $(docker ps -q)
+```
+
+## কন্টেইনার এর ঘটনাবলী
+
+```
+docker system events infinite
+```
+
+## পাবলিক পোর্টস
+
+```
+docker container port infinite
+```
+
+## চলমান প্রসেস
+
+```
+docker container top infinite
+```
+
+## কন্টেইনার এর রিসোর্স ব্যবহার
+
+```
+docker container stats infinite
+```
+
+## একটি কন্টেইনার ফাইল সিস্টেমে ফাইল বা ডিরেক্টরিগুলির পরিবর্তনগুলি পরিদর্শন
+
+```
+docker container diff infinite
+```
+
+## ইমেজ পরিচালনা করা
+
+### বর্তমান ডিরেক্টরিতে একটি ডকারফিল থেকে
+
+
+```
+docker build .
+```
+
+### একটি রিমোট GIT রিপোসিটোরি থেকে
+
+```
+docker build github.com/creack/docker-firefox
+```
+
+### একটি প্রসঙ্গ নির্দিষ্ট করার পরিবর্তে, আপনি URL এ একটি ডকারফিল পাস করতে পারেন অথবা STDIN এর মাধ্যমে ফাইলটি পাইপ করতে পারেন
+
+```
+docker build - < Dockerfile
+```
+
+```
+docker build - < context.tar.gz
+```
+
+### বিল্ডিং এবং ট্যাগিং
+
+```
+docker build -t eon/infinite .
+```
+
+### তৈরি করা এর প্রসঙ্গ উল্লেখ করার সময় একটি ডকারফিল তৈরি করা
+
+```
+docker build -f myOtherDockerfile .
+```
+
+### একটি রিমোট ডকারফিল URI থেকে  তৈরি করা
+
+```
+curl example.com/remote/Dockerfile | docker build -f - .
+```
+
+## একটি ইমেজ সরানো হচ্ছে
+
+```
+docker image rm nginx
+```
+
+## একটি ফাইল বা স্ট্যান্ডার্ড ইনপুট স্ট্রিম থেকে একটি ট্র্রেড রিপোসিটোরি লোড করা হচ্ছে
+
+```
+docker image load < ubuntu.tar.gz
+```
+
+```
+docker image load --input ubuntu.tar
+```
+
+## একটি টার আর্কাইভে একটি ছবি সংরক্ষণ করা
+
+```
+docker image save busybox > ubuntu.tar
+```
+
+## একটি ইমেজ এর  ইতিহাস দেখানো
+
+```
+docker image history
+```
+
+## একটি কন্টেইনার থেকে একটি ইমেজ তৈরি করা
+
+```
+docker container commit nginx
+```
+
+## একটি ইমেজ ট্যাগ করা
+
+```
+docker image tag nginx eon01/nginx
+```
+
+## একটি ইমেজ পুশ করা
+
+```
+docker image push eon01/nginx
+```
+
+
