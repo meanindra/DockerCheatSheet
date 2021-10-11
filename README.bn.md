@@ -373,3 +373,106 @@ docker image push eon01/nginx
 ```
 
 
+# নেটওয়ার্কিং
+
+## নেটওয়ার্ক তৈরি করা
+
+### একটি ওভারলে নেটওয়ার্ক তৈরি করা
+
+```
+docker network create -d overlay MyOverlayNetwork
+```
+
+
+### একটি ব্রিজ নেটওয়ার্ক তৈরি করা
+
+```
+docker network create -d bridge MyBridgeNetwork
+```
+
+### একটি কাস্টমাইজড ওভারলে নেটওয়ার্ক তৈরি করা
+
+```
+docker network create -d overlay \
+  --subnet=192.168.0.0/16 \
+  --subnet=192.170.0.0/16 \
+  --gateway=192.168.0.100 \
+  --gateway=192.170.0.100 \
+  --ip-range=192.168.1.0/24 \
+  --aux-address="my-router=192.168.1.5" --aux-address="my-switch=192.168.1.6" \
+  --aux-address="my-printer=192.170.1.5" --aux-address="my-nas=192.170.1.6" \
+  MyOverlayNetwork
+```
+
+## একটি নেটওয়ার্ক সরানো
+
+```
+docker network rm MyOverlayNetwork
+```
+
+##  নেটওয়ার্ক এর তালিকা
+
+```
+docker network ls
+```
+
+## একটি নেটওয়ার্ক সম্পর্কে তথ্য পাওয়া
+
+```
+docker network inspect MyOverlayNetwork
+```
+
+## একটি চলমান কন্টেইনারকে একটি নেটওয়ার্কে সংযুক্ত করা
+
+```
+docker network connect MyOverlayNetwork nginx
+```
+
+## একটি কন্টেইনারকে নেটওয়ার্কের সাথে সংযুক্ত করা যখন এটি শুরু হয়
+
+```
+docker container run -it -d --network=MyOverlayNetwork nginx
+```
+
+## একটি নেটওয়ার্ক থেকে একটি ধারক কন্টেইনারকে বিচ্ছিন্ন করা
+
+```
+docker network disconnect MyOverlayNetwork nginx
+```
+
+## এক্সপোজিং পোর্ট
+
+ডকার-ফাইল ব্যাবহার করে, আপনি ব্যবহার করে কন্টেইনার এর একটি পোর্ট খুলতে পারেন:
+
+
+```
+EXPOSE <port_number>
+```
+
+হোস্ট পোর্ট এর সাথে কন্টেইনার এর পোর্ট এর ম্যাপিং করা যেতে পারে
+
+```
+docker run -p $HOST_PORT:$CONTAINER_PORT --name <container_name> -t <image>
+```
+উদাহরণ
+
+```
+docker run -p $HOST_PORT:$CONTAINER_PORT --name infinite -t infinite
+```
+
+# নিরাপত্তা
+
+## নিরাপদ ডকার ছবি তৈরির জন্য নির্দেশিকা
+
+1. নুন্নতম বসে ইমেজ ব্যবহার করা
+2. সর্বনিম্ন সুবিধাপ্রাপ্ত ব্যবহারকারী হিসেবে কন্টেইনার এর নিবেদিত ব্যবহারকারী
+3. MITM আক্রমণ কমানোর জন্য ইমেজ  স্বাক্ষর করুন এবং যাচাই করুন
+4. ওপেন সোর্স দুর্বলতার জন্য খুঁজুন, ঠিক করুন এবং মনিটর করুন
+5. ডকার ইমেজে সংবেদনশীল তথ্য ফাঁস করবেন না
+6. অপরিবর্তনীয়তার জন্য নির্দিষ্ট ট্যাগ ব্যবহার করুন
+7. ADD এর পরিবর্তে COPY ব্যবহার করুন
+8. মেটাডেটার জন্য লেবেল ব্যবহার করুন
+9. ছোট সুরক্ষিত ইমেজ জন্য মাল্টি-স্টেজ বিল্ড ব্যবহার করুন
+10. একটি লিন্টার ব্যবহার করুন
+
+আপনি Snyk এর [10 ডকার ইমেজ সিকিউরিটি বেস্ট প্র্যাকটিস](https://snyk.io/blog/10-docker-image-security-best-practices/) ব্লগ পোস্টে আরও তথ্য পেতে পারেন।
